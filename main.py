@@ -144,7 +144,7 @@ while True:
         print("현재 시각 :", getTime())
 
         # 최근 매도 시각의 분 저장 --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
-        lastTradingSellTimeMinute = getTime().minute
+        lastTradingSellTimeMinute = datetime.datetime.now().minute
 
         print("sell !!!")
         #############################
@@ -173,6 +173,6 @@ while True:
     # 1초 간격으로 정보 가져오기
     time.sleep(1)
     # 현재 시각의 분 저장 --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
-    curTimeMinute = getTime().minute
+    curTimeMinute = datetime.datetime.now().minute
 
     # while   End-->
