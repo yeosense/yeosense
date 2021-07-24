@@ -9,5 +9,14 @@ yeosense/yeosense is a ✨ special ✨ repository because its `README.md` (this 
 You can click the Preview link to take a look at your changes.
 --->
 
+ㅇ 참고 사이트
+   https://github.com/youtube-jocoding/pyupbit-autotrade
+ㅇ 아마존 웹서비스
+   https://aws.amazon.com/ko/
 
-https://github.com/youtube-jocoding/pyupbit-autotrade
+ls
+cd yeosense
+rm README.md
+python3 main.py
+nohup python3 main.py &
+ps ax | grep .py
