@@ -90,14 +90,17 @@ while True:
         # BB-M 이상 가격으로 상승추세 - 3분간 상승장 지속
         print("BB-M - 상승추세", "-", getTime())
 
-        #print("p3_ma20---", p3_ma20, ma20[-4], ma20[-4] - ma20[-5])
-        #print("p2_ma20---", p2_ma20, ma20[-3], ma20[-3] - ma20[-4])  # -2
-        #print("p1_ma20---", p1_ma20, ma20[-2], ma20[-2] - ma20[-3])  # -1
-        #print("p0_ma20---", p0_ma20, ma20[-1], ma20[-1] - ma20[-2])  # current
-        #print()
+        print("p3_ma20---", p3_ma20, ma20[-4], ma20[-4] - ma20[-5])
+        print("p2_ma20---", p2_ma20, ma20[-3], ma20[-3] - ma20[-4])  # -2
+        print("p1_ma20---", p1_ma20, ma20[-2], ma20[-2] - ma20[-3])  # -1
+        print("p0_ma20---", p0_ma20, ma20[-1], ma20[-1] - ma20[-2])  # current
+        print()
 
-        if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
-            # 양봉, 양봉, 그리고 현시점의 ma20 보다 현시점의 시가, 종가 클 경우
+        #if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
+        #    # 양봉, 양봉, 그리고 현시점의 ma20 보다 현시점의 시가, 종가 클 경우
+        if (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 or p1_close > p0_ma20) :
+            # 양봉, 그리고 현시점의 ma20 보다 현시점의 시가 or 종가 클 경우
+
             # buy signal
             print("buy signal")
             #############################
@@ -105,9 +108,9 @@ while True:
             #############################
             print("현재 시각 :", getTime())
 
-            #print("p2----", df["open"][-3], df["close"][-3], df["close"][-3]-df["open"][-3])  # -2
-            #print("p1----", df["open"][-2], df["close"][-2], df["close"][-2]-df["open"][-2])  # -1
-            #print("p0----", df["open"][-1], df["close"][-1], df["close"][-1]-df["open"][-1])  # current
+            print("p2----", df["open"][-3], df["close"][-3], df["close"][-3]-df["open"][-3])  # -2
+            print("p1----", df["open"][-2], df["close"][-2], df["close"][-2]-df["open"][-2])  # -1
+            print("p0----", df["open"][-1], df["close"][-1], df["close"][-1]-df["open"][-1])  # current
             print()
 
             # buy
@@ -132,8 +135,8 @@ while True:
     if p0_open < p0_ma20 or p0_close < p0_ma20 :
         # sell
         p0_ma20 = ma20[-1]  # 현재
-        #print("p0---- ma20:", p0_ma20, "open:", df["open"][-1], "close:", df["close"][-1], "cur_price:", cur_price, df["close"][-1]-df["open"][-1])  # current
-        #print()
+        print("p0---- ma20:", p0_ma20, "open:", df["open"][-1], "close:", df["close"][-1], "cur_price:", cur_price, df["close"][-1]-df["open"][-1])  # current
+        print()
         print("현재 시각 :", getTime())
         print("sell !!!")
         #############################
@@ -148,7 +151,7 @@ while True:
 
         trnVal = upbit.sell_market_order(ticker, balance * 0.9995)
         #trnVal = "pass"
-        #print("rtnVal : ", trnVal)
+        print("rtnVal : ", trnVal)
 
         if ("error" in trnVal):
             if (trnVal["error"]['name'] != "invalid_volume_ask") :
