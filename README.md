@@ -16,8 +16,14 @@ You can click the Preview link to take a look at your changes.
    https://aws.amazon.com/ko/
 
 ls
+
 cd yeosense
+
 rm README.md
+
 python3 main.py
+
 nohup python3 main.py &
+
 ps ax | grep .py
+
