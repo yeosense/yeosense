@@ -162,7 +162,7 @@ while True :
 
         # sell
         print("sell !!!")
-        balance = upbit.get_balance("KRW")
+        balance = upbit.get_balance(ticker)
         print("balance : ", balance)  # 보유 현금 잔액조회
         print("보유 KRW 조회 : {0:>10,} 원".format(int(balance)))  # 보유 현금 조회
 
