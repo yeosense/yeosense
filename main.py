@@ -95,10 +95,8 @@ while True:
         print("p0_ma20---", p0_ma20, ma20[-1], ma20[-1] - ma20[-2])  # current
         print()
 
-        # if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
+        if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
         #    # 양봉, 양봉, 그리고 현시점의 ma20 보다 현시점의 시가, 종가 클 경우
-        if (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 or p1_close > p0_ma20):
-            # 양봉, 그리고 현시점의 ma20 보다 현시점의 시가 or 종가 클 경우
 
             # buy signal
             print("buy signal")
