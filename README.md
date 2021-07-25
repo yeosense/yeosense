@@ -23,7 +23,7 @@ rm README.md
 
 python3 main.py
 
-nohup python3 main.py &
+nohup python3 tr8bp.py &
 
 ps ax | grep .py
 
