@@ -6,6 +6,14 @@ import time
 def getTime():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+# 골드타임 여부
+curTimeMinute             = datetime.datetime.now().minute
+lastTradingSellTimeMinute = (datetime.datetime.now() + datetime.timedelta(minutes=-1)).minute
+lastTradingBuyTimeMinute  = (datetime.datetime.now() + datetime.timedelta(minutes=-1)).minute
+
+print(getTime())
+print(lastTradingSellTimeMinute)
+print(lastTradingBuyTimeMinute)
 
 #############################
 # 0. 거래소 접속
@@ -115,10 +123,15 @@ while True:
             print("balance : ", balance) # 보유 현금 잔액조회
             print("보유 KRW 조회 : {0:>10,} 원".format(int(balance))) # 보유 현금 조회
 
-            # 현재 보유코인 잔액 조회 후, 수수료 금액(0.05%(0.0005)) 제외한 금액으로 매수
-            trnVal = upbit.buy_market_order(ticker, balance * 0.9995)
-            # trnVal = "pass"
-            print("rtnVal : ", trnVal)
+            if lastTradingSellTimeMinute != curTimeMinute:
+                ## 최근 매도 시점의 분과 현재 분이 같으면 매수 제함  --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
+                # 현재 보유코인 잔액 조회 후, 수수료 금액(0.05%(0.0005)) 제외한 금액으로 매수
+                trnVal = upbit.buy_market_order(ticker, balance * 0.9995)
+                # 매수한 시각의 분(minute)
+                lastTradingBuyTimeMinute = datetime.datetime.now().minute
+                print("rtnVal #1: ", trnVal)
+
+
 
             if ("error" in trnVal):
                 if(trnVal["error"]['name'] not in "invalid_volume_ask" and trnVal["error"]['name'] not in "under_min_total_bid"):
@@ -145,19 +158,16 @@ while True:
         print("투자액 : ", balance * 0.9995) # 투자액
         print()
 
-        trnVal = upbit.sell_market_order(ticker, balance * 0.9995)
-        # trnVal = "pass"
-        #print("rtnVal : ", trnVal)
-
-        if ("error" in trnVal):
-            if (trnVal["error"]['name'] not in "invalid_volume_ask" and trnVal["error"]['name'] not in "under_min_total_market_ask") :
-                print("\n\nError 발생 - log출력 !!!")
-                print("chk error : ", "error" in trnVal)
-
-                print("trnVal:name : ", trnVal["error"]['name'])
-                print("trnVal:message : ", trnVal["error"]['message'])
-                print("\n\n")
+        if lastTradingBuyTimeMinute != curTimeMinute :
+            trnVal = upbit.sell_market_order(ticker, balance * 0.9995)
+            # 매도한 시각의 분(minute)
+            lastTradingSellTimeMinute = datetime.datetime.now().minute
+            print("rtnVal2 : ", trnVal)
 
 
     # 1초 간격으로 정보 가져오기
     time.sleep(1)
+    # 현재 시각의 분 저장 --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
+    curTimeMinute = datetime.datetime.now().minute
+
+    # while   End-->
