@@ -132,16 +132,6 @@ while True:
                 print("rtnVal #1: ", trnVal)
 
 
-
-            if ("error" in trnVal):
-                if(trnVal["error"]['name'] not in "invalid_volume_ask" and trnVal["error"]['name'] not in "under_min_total_bid"):
-                    print("\n\nError 발생 - log출력 !!!")
-                    print("chk error : ", "error" in trnVal)
-
-                    print("trnVal:name : ", trnVal["error"]['name'])
-                    print("trnVal:message : ", trnVal["error"]['message'])
-                    print("\n\n")
-
     if p0_open < p0_ma20 or p0_close < p0_ma20 :
         # sell
         p0_ma20 = ma20[-1] # 현재
