@@ -146,7 +146,7 @@ while True:
     #############################
     # 매수시점 구하기
     #############################
-    if pTRzone is True or (p3_ma20 < p2_ma20 and p2_ma20 < p1_ma20 and p1_ma20 < p0_ma20) or pGolden is True :
+    if pTRzone is True and((p3_ma20 < p2_ma20 and p2_ma20 < p1_ma20 and p1_ma20 < p0_ma20) or pGolden is True) :
         # pTRzone is True 이거나, BB-M 이상 가격으로 상승추세 - 3분간 상승장 지속이거나, # Golden zone일 경우
         print("BB-M - 상승추세")
 
