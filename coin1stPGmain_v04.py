@@ -12,7 +12,7 @@ lastTradingSellTimeMinute = (datetime.datetime.now() + datetime.timedelta(minute
 lastTradingBuyTimeMinute  = (datetime.datetime.now() + datetime.timedelta(minutes=-1)).minute
 
 # 매매구간 여부
-pTRzone = False
+pTRzn = False
 # 골드타임 여부
 pGolden  = False
 
@@ -126,19 +126,16 @@ while True:
     # 이평60이 평행/상승구간일 경우 -- 하락장일 경우 매매를 정지하기 위한 옵션(튀는값 없애기 위함)
     # 현재 가격이 이평20의 현재가 보다 크거나 같을 때 -- 이평20이 이평60 보다 작고, 이평60이 평행이며 일 경우 매매를 없애기 위한 조건임
     # - 매매시점 구하기
-    if ((p0_ma60 <= p0_ma20) or (p1_ma60 <= p0_ma60)) and (p0_ma20 <= cur_price) :
-        pTRzone = True
-        print(getTime(), "-", "pTRzone = True")
+    if p1_ma60 <= p0_ma60 <= p0_ma20 and p0_ma60 <= cur_price :
+        pTRzn = True
+        print(getTime(), "-", "pTRzn = True")
     else :
-        pTRzone = False
-        print(getTime(), "-", "pTRzone = False")
         # 모든 매매 정지
-        cur_price = 0
-        p1_open   = 0
-        p1_close  = 0
+        pTRzn = False
+        print(getTime(), "-", "pTRzn = False")
 
     # 이평5가  이평10 보다 클 경우 -- Golden zone
-    if (p0_ma5 > p0_ma10) :
+    if p0_ma5 > p0_ma10 :
         pGolden = True
     else :
         pGolden = False
@@ -146,56 +143,57 @@ while True:
     #############################
     # 매수시점 구하기
     #############################
-    if pTRzone is True and((p3_ma20 < p2_ma20 and p2_ma20 < p1_ma20 and p1_ma20 < p0_ma20) or pGolden is True) :
-        # pTRzone is True 이거나, BB-M 이상 가격으로 상승추세 - 3분간 상승장 지속이거나, # Golden zone일 경우
-        print("BB-M - 상승추세")
+    if pTRzn is True :
+        if ((p3_ma20 < p2_ma20 < p1_ma20 and p1_ma20 < p0_ma20) and cur_price > p0_ma20) or pGolden is True :
+            # pTRzn is True 이거나, BB-M 이상 가격으로 상승추세 - 3분간 상승장 지속이거나, # Golden zone일 경우
+            print("BB-M - 상승추세")
 
-        print("p3_ma20---", p3_ma20, ma20[-4], ma20[-4] - ma20[-5])
-        print("p2_ma20---", p2_ma20, ma20[-3], ma20[-3] - ma20[-4]) # -2
-        print("p1_ma20---", p1_ma20, ma20[-2], ma20[-2] - ma20[-3]) # -1
-        print("p0_ma20---", p0_ma20, ma20[-1], ma20[-1] - ma20[-2]) # current
-        print()
-
-        #if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
-        # 양봉, 양봉, 그리고 현시점의 ma20 보다 현시점의 시가, 종가 클 경우
-        # buy signal
-        print("buy signal")
-        #############################
-        # 매수
-        #############################
-        print("현재 시각 :", getTime())
-
-        print("p2----", df["open"][-3], df["close"][-3], df["close"][-3]-df["open"][-3]) # -2
-        print("p1----", df["open"][-2], df["close"][-2], df["close"][-2]-df["open"][-2]) # -1
-        print("p0----", df["open"][-1], df["close"][-1], df["close"][-1]-df["open"][-1]) # current
-        print()
-
-        # buy
-        print("buy !!!")
-        balance = upbit.get_balance("KRW")
-        print("balance : ", balance) # 보유 현금 잔액조회
-        print("보유 KRW 조회 : {0:>10,} 원".format(int(balance))) # 보유 현금 조회
-
-        if lastTradingSellTimeMinute != curTimeMinute:
-            ## 최근 매도 시점의 분과 현재 분이 같으면 매수 제함  --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
-            # 현재 보유코인 잔액 조회 후, 수수료 금액(0.05%(0.0005)) 제외한 금액으로 매수
-            trnVal = upbit.buy_market_order(ticker, balance * 0.9995)
-            # 매수한 시각의 분(minute)
-            lastTradingBuyTimeMinute = datetime.datetime.now().minute
-            print("rtnVal #1: ", trnVal)
+            print("p3_ma20---", p3_ma20, ma20[-4], ma20[-4] - ma20[-5])
+            print("p2_ma20---", p2_ma20, ma20[-3], ma20[-3] - ma20[-4]) # -2
+            print("p1_ma20---", p1_ma20, ma20[-2], ma20[-2] - ma20[-3]) # -1
+            print("p0_ma20---", p0_ma20, ma20[-1], ma20[-1] - ma20[-2]) # current
             print()
+
+            #if (p2_close - p2_open) >= 0 and (p1_close - p1_open) >= 0 and (p1_open > p0_ma20 and p1_close > p0_ma20) :
+            # 양봉, 양봉, 그리고 현시점의 ma20 보다 현시점의 시가, 종가 클 경우
+            # buy signal
+            print("buy signal")
+            #############################
+            # 매수
+            #############################
+            print("현재 시각 :", getTime())
+
+            print("p2----", df["open"][-3], df["close"][-3], df["close"][-3]-df["open"][-3]) # -2
+            print("p1----", df["open"][-2], df["close"][-2], df["close"][-2]-df["open"][-2]) # -1
+            print("p0----", df["open"][-1], df["close"][-1], df["close"][-1]-df["open"][-1]) # current
             print()
+
+            # buy
+            print("buy !!!")
+            balance = upbit.get_balance("KRW")
+            print("balance : ", balance) # 보유 현금 잔액조회
+            print("보유 KRW 조회 : {0:>10,} 원".format(int(balance))) # 보유 현금 조회
+
+            if lastTradingSellTimeMinute != curTimeMinute:
+                ## 최근 매도 시점의 분과 현재 분이 같으면 매수 제함  --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
+                # 현재 보유코인 잔액 조회 후, 수수료 금액(0.05%(0.0005)) 제외한 금액으로 매수
+                trnVal = upbit.buy_market_order(ticker, balance * 0.9995)
+                # 매수한 시각의 분(minute)
+                lastTradingBuyTimeMinute = datetime.datetime.now().minute
+                print("rtnVal #1: ", trnVal)
+                print()
+                print()
 
 
     #############################
     # 매도시점 구하기
     #############################
-    # 현시점의 시가, 종가 중 어느 하나가 이평20 보다 낮을 경우
-    # Golden zone이 아닐 경우에만
+    # 현시점의 가격이 이평20(BB-M) 보다 낮을 경우와
+    # Golden zone이 아닐 경우와
+    # 그리고, 이평60보다 현시점의 가격이 낮을 경우
     # 매도할 수 있다.
-    if ((p0_open < p0_ma20) or (p0_close < p0_ma20)) and (pGolden is False):
+    if ((cur_price < p0_ma20) and (pGolden is False)) or (cur_price < p0_ma60):
         # sell
-        p0_ma20 = ma20[-1] # 현재
         print("p0---- ma20:", p0_ma20, "open:", df["open"][-1], "close:", df["close"][-1], "cur_price:", cur_price, df["close"][-1]-df["open"][-1]) # current
         print("현재 시각 :", getTime())
         print("sell !!!")
@@ -218,8 +216,8 @@ while True:
             print()
 
 
-    # 1초 간격으로 정보 가져오기
-    time.sleep(1)
+    # 0.0001초 간격으로 정보 가져오기
+    time.sleep(0.001)
     # 현재 시각의 분 저장 --- cus. 하락시점 BB-M 아래위로 빈번한 매매 방지
     curTimeMinute = datetime.datetime.now().minute
 
