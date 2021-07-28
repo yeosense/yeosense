@@ -126,7 +126,7 @@ while True:
     # 이평60이 평행/상승구간일 경우 -- 하락장일 경우 매매를 정지하기 위한 옵션(튀는값 없애기 위함)
     # 현재 가격이 이평20의 현재가 보다 크거나 같을 때 -- 이평20이 이평60 보다 작고, 이평60이 평행이며 일 경우 매매를 없애기 위한 조건임
     # - 매매시점 구하기
-    if p1_ma60 <= p0_ma60 <= p0_ma20 and p0_ma60 <= cur_price :
+    if p1_ma60 <= p0_ma60 <= p0_ma20 and p0_ma60 <= cur_price and p0_ma20 <= cur_price:
         pTRzn = True
         print(getTime(), "-", "pTRzn = True")
     else :
