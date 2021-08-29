@@ -140,12 +140,14 @@ class Trade:
                 pGBuy_cci = True
             else :
                 pGBuy_cci = False
+            '''
             # sell#1
             if p1_cci > 100 and p0_cci < 100 :
                 pGSell_cci = True
             else :
                 pGSell_cci = False
-            # sell#1
+            '''
+            # sell#2
             if p1_cci > -100 and p0_cci < -100 :
                 pGSell_cci = True
             else :
