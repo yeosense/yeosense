@@ -15,6 +15,8 @@ You can click the Preview link to take a look at your changes.
 ㅇ 아마존 웹서비스
    https://aws.amazon.com/ko/
 
+git close https://github.com/yeosense/yeosense.git
+
 ls
 
 cd yeosense
